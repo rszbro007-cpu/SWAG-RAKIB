@@ -3,572 +3,2852 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PocketCash — User Panel</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#111827">
+<title>SWAG RAKIB — BRAND</title>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--primary:#111827;
+--accent:#ff1744;
+--gold:#f59e0b;
+--bg:#f4f6f8;
+--card:#fff;
+--text:#111827;
+--muted:#6b7280;
+--border:#e5e7eb;
+--green:#16a34a;
+--red:#dc2626;
+--shadow:0 8px 30px rgba(0,0,0,.07)
+}
+body.dark{
+--bg:#0b0f14;
+--card:#151a21;
+--text:#f4f4f5;
+--muted:#9ca3af;
+--border:#29313c
+}
+*{scrollbar-width:thin}
 body{
- margin:0;
- background:#eef2ff;
- font-family:'Hind Siliguri',sans-serif;
+font-family:Arial,Inter,sans-serif;
+background:var(--bg);
+color:var(--text);
+transition:.2s
 }
-.app{
- max-width:480px;
- min-height:100vh;
- margin:auto;
- background:#f8fafc;
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.bold{font-weight:800}
+
+.auth{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+background:linear-gradient(135deg,#05070b,#1f2937)
 }
-.screen,.page{display:none}
-.screen.active,.page.active{display:block}
-.input{
- width:100%;
- padding:13px;
- border:1px solid #d1d5db;
- border-radius:12px;
- outline:none;
- margin-top:6px;
- background:white;
+.auth-card{
+width:100%;
+max-width:430px;
+background:var(--card);
+border-radius:24px;
+padding:30px;
+box-shadow:0 25px 70px rgba(0,0,0,.3)
 }
-.input:focus{border-color:#4f46e5}
+.logo{
+font-size:23px;
+font-weight:1000;
+letter-spacing:-1px
+}
+.logo span{color:var(--accent)}
+.auth-logo{text-align:center;font-size:31px}
+.auth-sub{text-align:center;color:var(--muted);font-size:12px}
+.tabs{display:flex;margin:25px 0 18px}
+.tabs button{
+flex:1;border:0;padding:12px;
+background:var(--bg);color:var(--text)
+}
+.tabs button.active{background:var(--primary);color:#fff}
+.form-group{margin-bottom:15px}
+.form-group label{
+display:block;font-size:13px;font-weight:800;margin-bottom:7px
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
+width:100%;padding:13px;
+border:1px solid var(--border);
+border-radius:11px;
+outline:0;
+background:var(--bg);
+color:var(--text)
+}
+.form-group textarea{min-height:100px}
 .btn{
- width:100%;
- padding:13px;
- border-radius:12px;
- font-weight:700;
+border:0;border-radius:11px;padding:12px 17px;
+font-weight:800
 }
-.bottom{
- position:fixed;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:100%;
- max-width:480px;
- background:white;
- border-top:1px solid #e5e7eb;
- z-index:50;
+.btn-primary{background:var(--accent);color:#fff}
+.btn-dark{background:var(--primary);color:#fff}
+.btn-outline{
+background:transparent;
+border:1px solid var(--border);
+color:var(--text)
+}
+.btn-green{background:var(--green);color:#fff}
+.full{width:100%}
+
+.header{
+height:72px;
+position:sticky;
+top:0;
+z-index:1000;
+display:flex;
+align-items:center;
+gap:18px;
+padding:0 25px;
+background:var(--card);
+border-bottom:1px solid var(--border)
+}
+.search{flex:1;max-width:700px;margin:auto}
+.search input{
+width:100%;height:44px;padding:0 16px;
+border:1px solid var(--border);
+border-radius:12px;
+background:var(--bg);color:var(--text)
+}
+.head-actions{display:flex;gap:8px}
+.icon{
+width:42px;height:42px;
+border:1px solid var(--border);
+border-radius:11px;
+background:var(--card);
+color:var(--text);
+position:relative
+}
+.badge{
+position:absolute;top:-5px;right:-5px;
+background:var(--accent);color:white;
+font-size:10px;min-width:18px;height:18px;
+border-radius:20px;display:grid;place-items:center
+}
+
+.layout{display:flex;min-height:calc(100vh - 72px)}
+.sidebar{
+width:250px;position:fixed;top:72px;bottom:0;
+overflow:auto;background:var(--card);
+border-right:1px solid var(--border);
+padding:18px 13px
+}
+.menu-title{
+font-size:10px;color:var(--muted);
+font-weight:900;margin:18px 12px 7px
+}
+.menu button{
+width:100%;border:0;background:transparent;
+color:var(--text);padding:12px;border-radius:10px;
+display:flex;gap:11px;text-align:left;margin:2px 0
+}
+.menu button:hover,.menu button.active{
+background:var(--bg);font-weight:900
+}
+.main{
+margin-left:250px;width:calc(100% - 250px);
+max-width:1600px;padding:24px
+}
+.page{display:none}
+.page.active{display:block}
+
+.hero{
+border-radius:22px;min-height:290px;padding:35px;
+display:flex;align-items:center;justify-content:space-between;
+color:#fff;
+background:linear-gradient(110deg,#111827,#374151);
+overflow:hidden
+}
+.hero h1{font-size:42px;margin:10px 0}
+.hero p{color:#d1d5db}
+.hero-art{font-size:130px}
+
+.section{margin-top:30px}
+.section-head{
+display:flex;justify-content:space-between;
+align-items:center;margin-bottom:15px
+}
+.categories{
+display:grid;grid-template-columns:repeat(6,1fr);gap:12px
+}
+.category{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:17px;padding:18px 8px;
+text-align:center;box-shadow:var(--shadow);
+cursor:pointer
+}
+.category-icon{
+width:50px;height:50px;margin:auto auto 9px;
+display:grid;place-items:center;border-radius:15px;
+background:var(--bg);font-size:25px
+}
+
+.products{
+display:grid;grid-template-columns:repeat(5,1fr);gap:16px
+}
+.product{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:17px;overflow:hidden;
+position:relative;box-shadow:var(--shadow)
+}
+.product-image{
+height:220px;display:grid;place-items:center;
+font-size:80px;background:linear-gradient(135deg,#f1f5f9,#e5e7eb);
+cursor:pointer
+}
+.product-image img{width:100%;height:100%;object-fit:cover}
+.discount{
+position:absolute;left:9px;top:9px;
+background:var(--accent);color:#fff;
+padding:5px 7px;border-radius:7px;
+font-size:10px;font-weight:900
+}
+.heart{
+position:absolute;right:9px;top:9px;
+border:0;background:#fff;width:35px;height:35px;
+border-radius:50%;z-index:2
+}
+.product-body{padding:13px}
+.product-name{
+font-weight:800;white-space:nowrap;
+overflow:hidden;text-overflow:ellipsis
+}
+.rating{margin-top:6px;color:var(--gold);font-size:12px}
+.price{font-size:19px;font-weight:1000;margin-top:6px}
+.old{
+color:var(--muted);text-decoration:line-through;
+font-size:11px;margin-left:5px
+}
+.product-btns{display:flex;gap:7px;margin-top:11px}
+.product-btns button{flex:1}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:17px;padding:20px;
+box-shadow:var(--shadow)
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+.detail{
+display:grid;grid-template-columns:1.1fr 1fr;gap:25px
+}
+.gallery{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:20px;padding:15px
+}
+.main-photo{
+height:470px;border-radius:15px;background:var(--bg);
+display:grid;place-items:center;font-size:170px;overflow:hidden
+}
+.thumbs{
+display:grid;grid-template-columns:repeat(6,1fr);
+gap:8px;margin-top:10px
+}
+.thumb{
+height:65px;border:2px solid transparent;
+border-radius:9px;background:var(--bg);
+display:grid;place-items:center;font-size:25px;
+cursor:pointer
+}
+.thumb.active{border-color:var(--accent)}
+.detail-info h1{font-size:30px;margin:10px 0}
+.detail-price{font-size:32px;font-weight:1000;margin:15px 0}
+.option{margin:20px 0}
+.option button{
+border:1px solid var(--border);
+background:var(--card);color:var(--text);
+border-radius:8px;padding:9px 14px;margin:5px 4px 0 0
+}
+.option button.selected{background:var(--primary);color:#fff}
+
+.cart-row{
+display:flex;gap:15px;align-items:center;
+padding:15px 0;border-bottom:1px solid var(--border)
+}
+.cart-img{
+width:80px;height:80px;display:grid;place-items:center;
+background:var(--bg);border-radius:12px;font-size:40px
+}
+.cart-info{flex:1}
+
+.payment-option{
+border:1px solid var(--border);
+border-radius:13px;padding:15px;
+display:flex;gap:12px;align-items:center;
+margin-bottom:10px;cursor:pointer
+}
+.payment-option.selected{
+border-color:var(--accent);
+box-shadow:0 0 0 2px rgba(255,23,68,.1)
+}
+.pay-logo{
+width:45px;height:45px;border-radius:12px;
+display:grid;place-items:center;
+font-weight:1000;color:#fff
+}
+.bk{background:#e2136e}
+.ng{background:#f58220}
+
+.balance{
+padding:25px;border-radius:20px;
+background:linear-gradient(135deg,#111827,#374151);
+color:#fff
+}
+.balance h1{font-size:36px;margin:12px 0}
+
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{
+padding:13px 10px;
+border-bottom:1px solid var(--border);
+text-align:left;white-space:nowrap
+}
+th{font-size:11px;color:var(--muted)}
+.status{
+display:inline-block;border-radius:30px;
+padding:5px 9px;font-size:10px;font-weight:900
+}
+.pending{background:#fef3c7;color:#92400e}
+.success{background:#dcfce7;color:#166534}
+
+.timeline{
+display:flex;justify-content:space-between;
+position:relative;margin:30px 0
+}
+.timeline:before{
+content:"";position:absolute;top:16px;left:6%;right:6%;
+height:3px;background:var(--border)
+}
+.step{flex:1;text-align:center;position:relative;z-index:2}
+.dot{
+width:34px;height:34px;margin:auto;border-radius:50%;
+background:var(--border);display:grid;place-items:center
+}
+.step.done .dot{background:var(--green);color:#fff}
+.step small{display:block;margin-top:7px;color:var(--muted)}
+
+.bottom{display:none}
+
+.modal{
+position:fixed;inset:0;background:rgba(0,0,0,.65);
+display:none;align-items:center;justify-content:center;
+z-index:5000;padding:15px
+}
+.modal.show{display:flex}
+.modal-box{
+width:100%;max-width:620px;max-height:92vh;
+overflow:auto;background:var(--card);
+color:var(--text);border-radius:20px;padding:23px;
+position:relative
+}
+.close{
+position:absolute;right:14px;top:10px;
+border:0;background:transparent;
+color:var(--text);font-size:26px
 }
 .toast{
- position:fixed;
- top:20px;
- left:50%;
- transform:translateX(-50%);
- background:#111827;
- color:white;
- padding:12px 18px;
- border-radius:12px;
- display:none;
- z-index:999;
- font-size:14px;
+position:fixed;left:50%;bottom:25px;
+transform:translate(-50%,120px);
+background:#111827;color:#fff;
+padding:13px 18px;border-radius:11px;
+z-index:8000;transition:.3s
 }
-.toast.show{display:block}
+.toast.show{transform:translate(-50%,0)}
+
+@media(max-width:1200px){
+.products{grid-template-columns:repeat(4,1fr)}
+.categories{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:900px){
+.sidebar{display:none}
+.main{margin-left:0;width:100%;padding:17px}
+.header{padding:10px 14px;height:auto;flex-wrap:wrap}
+.header .search{order:3;flex-basis:100%;max-width:none}
+.products{grid-template-columns:repeat(3,1fr)}
+.detail{grid-template-columns:1fr}
+.grid2,.grid3{grid-template-columns:1fr}
+.bottom{
+display:flex;position:fixed;left:0;right:0;bottom:0;
+height:65px;background:var(--card);
+border-top:1px solid var(--border);
+z-index:3000;justify-content:space-around
+}
+.bottom button{
+border:0;background:transparent;color:var(--muted);
+font-size:11px
+}
+body{padding-bottom:65px}
+}
+@media(max-width:600px){
+.logo{font-size:18px}
+.hero{min-height:235px;padding:25px}
+.hero h1{font-size:29px}
+.hero-art{font-size:75px}
+.categories{grid-template-columns:repeat(3,1fr);gap:8px}
+.products{grid-template-columns:repeat(2,1fr);gap:10px}
+.product-image{height:160px;font-size:60px}
+.product-body{padding:10px}
+.main-photo{height:310px;font-size:110px}
+.thumb{height:50px}
+}
 </style>
 </head>
 
 <body>
 
-<div id="toast" class="toast"></div>
+<!-- AUTH -->
+<div class="auth" id="authScreen">
+<div class="auth-card">
 
-<div class="app">
+<div class="auth-logo logo">SWAG <span>RAKIB</span></div>
+<div class="auth-sub">BRAND • WEAR YOUR SWAG</div>
 
-<!-- ================= LOGIN ================= -->
-<section id="loginScreen" class="screen active">
-<div class="min-h-screen flex items-center justify-center p-5">
-<div class="w-full">
-<div class="text-center mb-7">
-<div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xl">
-<i class="fa-solid fa-wallet text-3xl"></i>
+<div class="tabs">
+<button id="loginTab" class="active" onclick="authMode('login')">Login</button>
+<button id="regTab" onclick="authMode('register')">Create Account</button>
 </div>
-<h1 class="text-2xl font-bold mt-4">PocketCash</h1>
-<p class="text-sm text-slate-500">নিরাপদ User Panel</p>
-</div>
-<div class="bg-white rounded-3xl shadow-lg p-5">
-<h2 class="text-xl font-bold">Login</h2>
-<label class="block mt-5 text-sm font-semibold">মোবাইল নম্বর</label>
-<input id="loginPhone" class="input" type="tel" maxlength="11" placeholder="01XXXXXXXXX">
-<label class="block mt-4 text-sm font-semibold">Password</label>
-<div class="relative">
-<input id="loginPassword" class="input pr-12" type="password" placeholder="Password">
-<button onclick="togglePass('loginPassword')" class="absolute right-3 top-3 text-slate-500">
-<i class="fa-solid fa-eye"></i>
-</button>
-</div>
-<button onclick="login()" class="btn bg-indigo-600 text-white mt-5">
-<i class="fa-solid fa-right-to-bracket"></i> Login
-</button>
-<button onclick="show('registerScreen')" class="w-full text-indigo-600 font-bold mt-4">নতুন অ্যাকাউন্ট তৈরি করুন</button>
-</div>
-</div>
-</div>
-</section>
 
-<!-- ================= REGISTER ================= -->
-<section id="registerScreen" class="screen">
-<div class="min-h-screen p-5">
-<button onclick="show('loginScreen')" class="text-indigo-600 mb-5">
-<i class="fa-solid fa-arrow-left"></i> Back
-</button>
-<div class="text-center mb-5">
-<div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-600 text-white flex items-center justify-center">
-<i class="fa-solid fa-user-plus text-2xl"></i>
+<div id="loginBox">
+
+<div class="form-group">
+<label>Email / Mobile</label>
+<input id="loginEmail" placeholder="Email address">
 </div>
-<h1 class="text-2xl font-bold mt-3">Create Account</h1>
+
+<div class="form-group">
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="Password">
 </div>
-<div class="bg-white rounded-3xl shadow-lg p-5">
-<label class="text-sm font-semibold">নাম</label>
-<input id="regName" class="input" placeholder="আপনার পূর্ণ নাম">
-<label class="text-sm font-semibold block mt-4">মোবাইল নম্বর</label>
-<input id="regPhone" class="input" type="tel" maxlength="11" placeholder="01XXXXXXXXX">
-<label class="text-sm font-semibold block mt-4">Password</label>
-<input id="regPass" class="input" type="password" placeholder="কমপক্ষে 6 অক্ষর">
-<label class="text-sm font-semibold block mt-4">Confirm Password</label>
-<input id="regConfirm" class="input" type="password" placeholder="Password আবার লিখুন">
-<label class="text-sm font-semibold block mt-4">Referral Code (Optional)</label>
-<input id="regRef" class="input" placeholder="Referral Code">
-<label class="flex gap-2 mt-4 text-sm">
-<input id="terms" type="checkbox">
-<span>আমি Terms & Conditions গ্রহণ করছি।</span>
+
+<button class="btn btn-dark full" onclick="login()">Login</button>
+
+<button class="btn btn-outline full" style="margin-top:10px"
+onclick="resetPassword()">Forgot Password?</button>
+
+</div>
+
+<div id="registerBox" class="hidden">
+
+<div class="form-group">
+<label>Full Name</label>
+<input id="regName" placeholder="Your name">
+</div>
+
+<div class="form-group">
+<label>Mobile Number</label>
+<input id="regPhone" placeholder="01XXXXXXXXX">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="regEmail" type="email" placeholder="your@email.com">
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input id="regPassword" type="password" placeholder="Minimum 6 characters">
+</div>
+
+<div class="form-group">
+<label>Confirm Password</label>
+<input id="regConfirm" type="password">
+</div>
+
+<label class="small">
+<input type="checkbox" id="terms">
+I agree to Terms & Conditions
 </label>
-<button onclick="register()" class="btn bg-indigo-600 text-white mt-5">Create Account</button>
-</div>
-</div>
-</section>
 
-<!-- ================= MAIN APP ================= -->
-<section id="mainApp" class="screen">
-<header class="bg-indigo-600 text-white p-4">
-<div class="flex justify-between items-center">
-<div>
-<h1 class="text-xl font-bold">PocketCash</h1>
-<p class="text-xs text-indigo-200">স্বাগতম, <span id="userName">User</span></p>
+<button class="btn btn-primary full"
+style="margin-top:15px"
+onclick="register()">Create Account</button>
+
 </div>
-<button onclick="page('notification')" class="relative w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center">
-<i class="fa-solid fa-bell"></i>
+</div>
+</div>
+
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+<header class="header">
+
+<div class="logo">SWAG <span>RAKIB</span></div>
+
+<div class="search">
+<input id="search"
+placeholder="Search products..."
+oninput="searchProducts()">
+</div>
+
+<div class="head-actions">
+<button class="icon" onclick="go('notifications')">🔔</button>
+<button class="icon" onclick="go('wishlist')">♡</button>
+<button class="icon" onclick="go('cart')">
+🛒<span class="badge" id="cartBadge">0</span>
 </button>
 </div>
+
 </header>
 
-<main class="p-4 pb-28">
+<div class="layout">
+
+<aside class="sidebar">
+<div class="menu">
+
+<div class="menu-title">Shop</div>
+
+<button onclick="go('home',this)">🏠 Home</button>
+<button onclick="go('categories',this)">◈ Categories</button>
+<button onclick="go('shop',this)">🛍️ All Products</button>
+<button onclick="go('wishlist',this)">♡ Wishlist</button>
+<button onclick="go('cart',this)">🛒 Cart</button>
+
+<div class="menu-title">My Account</div>
+
+<button onclick="go('orders',this)">📦 My Orders</button>
+<button onclick="go('wallet',this)">💰 Wallet</button>
+<button onclick="go('coupons',this)">🎟️ Coupons</button>
+<button onclick="go('rewards',this)">⭐ Rewards</button>
+<button onclick="go('referral',this)">👥 Referral</button>
+
+<div class="menu-title">Service</div>
+
+<button onclick="go('notifications',this)">🔔 Notifications</button>
+<button onclick="support()">💬 Support</button>
+<button onclick="go('profile',this)">👤 Profile</button>
+<button onclick="go('settings',this)">⚙️ Settings</button>
+<button onclick="logout()">🚪 Logout</button>
+
+</div>
+</aside>
+
+
+<main class="main">
 
 <!-- HOME -->
-<div id="home" class="page active">
-<div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl p-5 shadow-lg">
-<p class="text-sm opacity-80">Available Balance</p>
-<h2 class="text-3xl font-bold">৳ <span id="balance">0</span></h2>
-<div class="grid grid-cols-2 gap-2 mt-5">
-<button onclick="page('deposit')" class="bg-white text-indigo-600 p-3 rounded-xl font-bold">Deposit</button>
-<button onclick="page('withdraw')" class="bg-indigo-700 p-3 rounded-xl font-bold">Withdraw</button>
-</div>
-</div>
+<section id="home" class="page active">
 
-<!-- PLAN -->
-<div class="mt-5">
-<h2 class="font-bold text-lg mb-3">💎 Plan</h2>
-<div class="bg-white border rounded-2xl p-4">
-<div class="flex justify-between">
+<div class="hero">
+
 <div>
-<p class="text-sm text-slate-500">Starter Plan</p>
-<h2 class="text-2xl font-bold text-indigo-600">৳1,500</h2>
-</div>
-<span id="planStatus" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs h-fit">Inactive</span>
-</div>
-<button onclick="page('deposit')" class="btn bg-indigo-600 text-white mt-4">Activate / Deposit</button>
-</div>
+<div class="small">SWAG RAKIB — BRAND</div>
+<h1>Wear Your SWAG.</h1>
+<p>Fashion • Lifestyle • Accessories</p>
+
+<button class="btn btn-primary"
+style="margin-top:20px"
+onclick="go('shop')">
+Shop Now →
+</button>
 </div>
 
-<!-- STATS -->
-<div class="grid grid-cols-2 gap-3 mt-4">
-<div class="bg-white border rounded-xl p-4">
-<i class="fa-solid fa-users text-indigo-600"></i>
-<p class="text-xs text-slate-500 mt-2">Total Referral</p>
-<h2 class="text-2xl font-bold"><span id="refCount">0</span></h2>
-</div>
-<div class="bg-white border rounded-xl p-4">
-<i class="fa-solid fa-gift text-emerald-600"></i>
-<p class="text-xs text-slate-500 mt-2">Reward</p>
-<h2 class="text-2xl font-bold">৳ <span id="reward">0</span></h2>
-</div>
+<div class="hero-art">🛍️</div>
+
 </div>
 
-<!-- QUICK ACTIONS -->
-<h2 class="font-bold text-lg mt-5 mb-3">⚡ Quick Actions</h2>
-<div class="grid grid-cols-4 gap-2">
-<button onclick="page('deposit')" class="bg-white border rounded-xl p-3 text-xs"><i class="fa-solid fa-arrow-down text-indigo-600 text-lg"></i><br>Deposit</button>
-<button onclick="page('withdraw')" class="bg-white border rounded-xl p-3 text-xs"><i class="fa-solid fa-arrow-up text-red-500 text-lg"></i><br>Withdraw</button>
-<button onclick="page('referral')" class="bg-white border rounded-xl p-3 text-xs"><i class="fa-solid fa-link text-green-600 text-lg"></i><br>Referral</button>
-<button onclick="page('process')" class="bg-white border rounded-xl p-3 text-xs"><i class="fa-solid fa-circle-info text-purple-600 text-lg"></i><br>Process</button>
-</div>
+<div class="section">
+
+<div class="section-head">
+<h2>Explore Categories</h2>
+<button class="btn btn-outline"
+onclick="go('categories')">View All</button>
 </div>
 
-<!-- DEPOSIT -->
-<div id="deposit" class="page">
-<h2 class="text-xl font-bold mb-4">📥 Deposit</h2>
-<div class="bg-white border rounded-2xl p-4">
-<p class="text-sm font-semibold">Payment Method</p>
-<div class="grid grid-cols-2 gap-3 mt-3">
-<button id="bkashBtn" onclick="payment('bkash')" class="border-2 border-indigo-600 rounded-xl p-4"><span class="text-pink-500 text-xl">●</span><br><b>bKash</b></button>
-<button id="nagadBtn" onclick="payment('nagad')" class="border rounded-xl p-4"><span class="text-orange-500 text-xl">●</span><br><b>Nagad</b></button>
-</div>
-<div class="bg-indigo-50 rounded-xl p-4 mt-4">
-<p class="text-xs text-indigo-600">টাকা পাঠাবেন এই নম্বরে</p>
-<div class="flex justify-between items-center">
-<b id="payNumber" class="text-xl">01800000000</b>
-<button onclick="copyPay()" class="bg-indigo-600 text-white px-3 py-2 rounded-lg"><i class="fa-regular fa-copy"></i></button>
-</div>
-<p id="payType" class="text-xs text-slate-500">bKash Personal</p>
-</div>
-<label class="block text-sm font-semibold mt-4">Amount</label>
-<input value="1500" readonly class="input bg-slate-100">
-<label class="block text-sm font-semibold mt-4">Transaction ID</label>
-<input id="trx" class="input" placeholder="Transaction ID লিখুন">
-<button onclick="depositSubmit()" class="btn bg-indigo-600 text-white mt-5">Submit Deposit</button>
-</div>
+<div class="categories" id="homeCats"></div>
+
 </div>
 
-<!-- WITHDRAW -->
-<div id="withdraw" class="page">
-<h2 class="text-xl font-bold mb-4">📤 Withdraw</h2>
-<div class="bg-white border rounded-2xl p-4">
-<label class="text-sm font-semibold">Method</label>
-<select id="withdrawMethod" class="input"><option>bKash</option><option>Nagad</option></select>
-<label class="text-sm font-semibold block mt-4">আপনার নম্বর</label>
-<input id="withdrawNumber" class="input" type="tel" maxlength="11" placeholder="01XXXXXXXXX">
-<label class="text-sm font-semibold block mt-4">Amount</label>
-<input id="withdrawAmount" class="input" type="number" placeholder="Amount">
-<p class="text-xs text-slate-500 mt-2">Available: ৳<span id="withdrawBalance">0</span></p>
-<button onclick="withdrawSubmit()" class="btn bg-indigo-600 text-white mt-5">Request Withdrawal</button>
+<div class="section">
+
+<div class="section-head">
+<div>
+<h2>🔥 Flash Sale</h2>
+<span class="muted small">Limited-time deals</span>
 </div>
+<b id="saleTimer">08:00:00</b>
 </div>
 
-<!-- REFERRAL -->
-<div id="referral" class="page">
-<h2 class="text-xl font-bold mb-4">🔗 Referral</h2>
-<div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl p-5">
-<p class="text-sm opacity-80">Referral Code</p>
-<h2 id="refCode" class="text-3xl font-bold">FR000000</h2>
-<button onclick="copyReferral()" class="w-full bg-white text-indigo-600 p-3 rounded-xl mt-4 font-bold">Copy Referral Link</button>
-</div>
-<div class="bg-white border rounded-xl p-4 mt-4">
-<p class="text-xs text-slate-500">Referral Link</p>
-<input id="refLink" readonly class="input">
-</div>
+<div class="products" id="flashProducts"></div>
+
 </div>
 
-<!-- PROFILE -->
-<div id="profile" class="page">
-<h2 class="text-xl font-bold mb-4">👤 Profile</h2>
-<div class="bg-white border rounded-2xl p-5">
-<label class="block text-xs text-slate-500 mt-5">Name</label>
-<input id="profileName" class="input">
-<label class="block text-xs text-slate-500 mt-4">Mobile</label>
-<input id="profilePhone" readonly class="input bg-slate-100">
-<label class="block text-xs text-slate-500 mt-4">Referral Code</label>
-<input id="profileRef" readonly class="input bg-slate-100">
-<button onclick="saveProfile()" class="btn bg-indigo-600 text-white mt-5">Save Profile</button>
+<div class="section">
+<h2>⭐ Best Sellers</h2>
+<br>
+<div class="products" id="bestProducts"></div>
 </div>
-<button onclick="logout()" class="btn bg-red-50 text-red-600 mt-4">Logout</button>
-</div>
-
-<!-- NOTIFICATION -->
-<div id="notification" class="page">
-<h2 class="text-xl font-bold mb-4">🔔 Notifications</h2>
-<div class="bg-white border rounded-xl p-4">
-<b>স্বাগতম 🎉</b>
-<p class="text-xs text-slate-500 mt-1">আপনার account সফলভাবে যুক্ত হয়েছে।</p>
-</div>
-</div>
-
-<!-- PROCESS -->
-<div id="process" class="page">
-<h2 class="text-xl font-bold mb-4">📖 কাজের Process</h2>
-<div class="bg-white border rounded-xl p-4">
-<b>নির্দেশিকা:</b> ডিপোজিট ও রেফার করে আয় করুন।
-</div>
-</div>
-
-</main>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom">
-<div class="grid grid-cols-5 text-center py-2">
-<button onclick="page('home')" class="text-indigo-600 text-xs"><i class="fa-solid fa-house text-lg"></i><br>Home</button>
-<button onclick="page('deposit')" class="text-slate-500 text-xs"><i class="fa-solid fa-wallet text-lg"></i><br>Deposit</button>
-<button onclick="page('referral')" class="text-slate-500 text-xs"><i class="fa-solid fa-link text-lg"></i><br>Referral</button>
-<button onclick="page('notification')" class="text-slate-500 text-xs"><i class="fa-solid fa-bell text-lg"></i><br>Notice</button>
-<button onclick="page('profile')" class="text-slate-500 text-xs"><i class="fa-solid fa-user text-lg"></i><br>Profile</button>
-</div>
-</nav>
 
 </section>
+
+
+<!-- CATEGORIES -->
+<section id="categories" class="page">
+
+<div class="section-head">
+<div>
+<h2>Categories</h2>
+<p class="muted">Find your style</p>
+</div>
 </div>
 
-<!-- Firebase & All Functions Script -->
+<div class="categories" id="allCats"></div>
+
+</section>
+
+
+<!-- SHOP -->
+<section id="shop" class="page">
+
+<div class="section-head">
+
+<div>
+<h2 id="shopTitle">All Products</h2>
+<p class="muted" id="shopCount"></p>
+</div>
+
+<select id="sortSelect"
+onchange="sortProducts(this.value)"
+style="padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text)">
+
+<option value="default">Sort By</option>
+<option value="low">Price Low → High</option>
+<option value="high">Price High → Low</option>
+<option value="discount">Highest Discount</option>
+
+</select>
+
+</div>
+
+<div class="products" id="shopGrid"></div>
+
+</section>
+
+
+<!-- PRODUCT -->
+<section id="product" class="page">
+
+<button class="btn btn-outline"
+onclick="go('shop')">← Back</button>
+
+<div class="detail" style="margin-top:18px">
+
+<div class="gallery">
+
+<div class="main-photo" id="mainPhoto">👕</div>
+
+<div class="thumbs" id="thumbs"></div>
+
+</div>
+
+<div class="detail-info">
+
+<span class="status success">✓ In Stock</span>
+
+<h1 id="dName"></h1>
+
+<div class="rating">
+★★★★★ <span class="muted">(124 Reviews)</span>
+</div>
+
+<div class="detail-price" id="dPrice"></div>
+
+<p class="muted" id="dDesc"></p>
+
+<div class="option">
+<b>Size</b><br>
+<button onclick="choose(this)">S</button>
+<button onclick="choose(this)">M</button>
+<button onclick="choose(this)">L</button>
+<button onclick="choose(this)">XL</button>
+<button onclick="choose(this)">XXL</button>
+</div>
+
+<div class="option">
+<b>Color</b><br>
+<button onclick="choose(this)">Black</button>
+<button onclick="choose(this)">White</button>
+<button onclick="choose(this)">Red</button>
+</div>
+
+<div class="card">
+🚚 <b>Fast Delivery</b>
+<p class="muted small">
+Estimated delivery 2–5 working days.
+</p>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:15px">
+
+<button class="btn btn-outline"
+onclick="toggleWish(currentProduct.id)">♡</button>
+
+<button class="btn btn-dark"
+onclick="addCurrent()">🛒 Add</button>
+
+<button class="btn btn-primary"
+onclick="buyNow()">⚡ Buy Now</button>
+
+</div>
+
+</div>
+</div>
+
+<div class="section grid2">
+
+<div class="card">
+<h3>📋 Product Details</h3>
+<br>
+<p id="specText" class="muted"></p>
+</div>
+
+<div class="card">
+<h3>⭐ Customer Reviews</h3>
+<br>
+<div>★★★★★ <b>4.8/5</b></div>
+<p class="muted">Based on verified purchases.</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- WISHLIST -->
+<section id="wishlist" class="page">
+<div class="section-head"><h2>♡ Wishlist</h2></div>
+<div class="products" id="wishGrid"></div>
+</section>
+
+
+<!-- CART -->
+<section id="cart" class="page">
+
+<div class="section-head">
+<div>
+<h2>🛒 Shopping Cart</h2>
+<p class="muted">Review your items</p>
+</div>
+</div>
+
+<div id="cartBox"></div>
+
+</section>
+
+
+<!-- CHECKOUT -->
+<section id="checkout" class="page">
+
+<div class="section-head">
+<h2>Secure Checkout</h2>
+</div>
+
+<div class="grid2">
+
+<div class="card">
+
+<h3>📍 Delivery Address</h3>
+<br>
+
+<div class="form-group">
+<label>Full Name</label>
+<input id="cName">
+</div>
+
+<div class="form-group">
+<label>Mobile Number</label>
+<input id="cPhone">
+</div>
+
+<div class="form-group">
+<label>District</label>
+
+<select id="cDistrict">
+<option value="">Select District</option>
+<option>Dhaka</option>
+<option>Thakurgaon</option>
+<option>Rangpur</option>
+<option>Dinajpur</option>
+<option>Chittagong</option>
+<option>Rajshahi</option>
+<option>Khulna</option>
+<option>Sylhet</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Full Address</label>
+<textarea id="cAddress"></textarea>
+</div>
+
+</div>
+
+
+<div>
+
+<div class="card">
+
+<h3>🎟️ Coupon</h3>
+<br>
+
+<div style="display:flex;gap:8px">
+
+<input id="couponInput"
+style="flex:1;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)"
+placeholder="Coupon code">
+
+<button class="btn btn-dark"
+onclick="applyCoupon()">Apply</button>
+
+</div>
+
+<p id="couponMsg" class="small"></p>
+
+</div>
+
+
+<div class="card" style="margin-top:15px">
+
+<h3>💳 Payment Method</h3>
+<br>
+
+<div class="payment-option selected"
+id="codOption"
+onclick="selectPayment('cod')">
+
+<div class="pay-logo" style="background:#111827">৳</div>
+
+<div>
+<b>Cash on Delivery</b>
+<p class="muted small">Pay when you receive</p>
+</div>
+
+</div>
+
+
+<div class="payment-option"
+id="bkOption"
+onclick="selectPayment('bkash')">
+
+<div class="pay-logo bk">bK</div>
+
+<div>
+<b>bKash</b>
+<p class="muted small">Manual payment verification</p>
+</div>
+
+</div>
+
+
+<div class="payment-option"
+id="ngOption"
+onclick="selectPayment('nagad')">
+
+<div class="pay-logo ng">N</div>
+
+<div>
+<b>Nagad</b>
+<p class="muted small">Manual payment verification</p>
+</div>
+
+</div>
+
+
+<div id="paymentProofBox"
+class="hidden"
+style="margin-top:15px">
+
+<div class="card">
+
+<b id="paymentTitle"></b>
+
+<p id="paymentNumber"
+class="muted small"></p>
+
+<button class="btn btn-outline"
+onclick="copyPaymentNumber()">
+Copy Number
+</button>
+
+<div class="form-group" style="margin-top:15px">
+<label>Transaction ID</label>
+<input id="txId">
+</div>
+
+<div class="form-group">
+<label>Payment Screenshot</label>
+<input id="paymentScreenshot"
+type="file"
+accept="image/*">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card" style="margin-top:15px">
+
+<h3>🧾 Order Summary</h3>
+
+<div id="summary" style="margin-top:15px"></div>
+
+<button class="btn btn-primary full"
+style="margin-top:15px"
+onclick="confirmOrder()">
+🔒 Confirm Order
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ORDERS -->
+<section id="orders" class="page">
+
+<div class="section-head">
+<h2>📦 My Orders</h2>
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Order</th>
+<th>Items</th>
+<th>Total</th>
+<th>Payment</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="ordersTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- WALLET -->
+<section id="wallet" class="page">
+
+<div class="section-head">
+<h2>💰 Wallet</h2>
+<button class="btn btn-primary"
+onclick="depositModal()">+ Deposit</button>
+</div>
+
+<div class="grid3">
+
+<div class="balance">
+<span class="small">Available Balance</span>
+<h1 id="balance">৳0</h1>
+<span>SWAG RAKIB Wallet</span>
+</div>
+
+<div class="card">
+<span class="muted small">Pending Deposit</span>
+<h2 id="pending">৳0</h2>
+</div>
+
+<div class="card">
+<span class="muted small">Reward Points</span>
+<h2 id="walletPoints">0</h2>
+</div>
+
+</div>
+
+<div class="card section">
+
+<h3>Transaction History</h3>
+<br>
+
+<div class="table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="transactions"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- COUPONS -->
+<section id="coupons" class="page">
+
+<div class="section-head">
+<h2>🎟️ Coupons & Offers</h2>
+</div>
+
+<div class="grid3">
+
+<div class="card">
+<h2>SWAG10</h2>
+<p class="muted">10% OFF</p>
+<br>
+<button class="btn btn-dark"
+onclick="copy('SWAG10')">Copy Code</button>
+</div>
+
+<div class="card">
+<h2>WELCOME50</h2>
+<p class="muted">৳50 OFF</p>
+<br>
+<button class="btn btn-dark"
+onclick="copy('WELCOME50')">Copy Code</button>
+</div>
+
+<div class="card">
+<h2>FREESHIP</h2>
+<p class="muted">Free Delivery</p>
+<br>
+<button class="btn btn-dark"
+onclick="copy('FREESHIP')">Copy Code</button>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- REWARDS -->
+<section id="rewards" class="page">
+
+<div class="section-head">
+<h2>⭐ Loyalty Rewards</h2>
+</div>
+
+<div class="grid2">
+
+<div class="balance">
+<span>Your Points</span>
+<h1 id="points">0</h1>
+<span>100 points = ৳10 reward</span>
+</div>
+
+<div class="card">
+<h3>How to earn?</h3>
+<br>
+<p>🛍️ Purchase</p><br>
+<p>⭐ Review</p><br>
+<p>👥 Refer friends</p><br>
+<p>🎉 Campaign bonus</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- REFERRAL -->
+<section id="referral" class="page">
+
+<div class="section-head">
+<h2>👥 Referral Program</h2>
+</div>
+
+<div class="card">
+
+<p class="muted">Your referral code</p>
+
+<h1 style="margin:10px 0"
+id="refCode">SWAG1234</h1>
+
+<button class="btn btn-primary"
+onclick="copy(document.getElementById('refCode').textContent)">
+Copy & Share
+</button>
+
+</div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+<div class="section-head">
+<h2>🔔 Notifications</h2>
+</div>
+
+<div class="card" id="notificationBox">
+
+<p>🎉 Welcome to SWAG RAKIB!</p>
+<hr style="margin:15px 0;border-color:var(--border)">
+<p>🔥 Flash Sale is live.</p>
+
+</div>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+<div class="section-head">
+<h2>👤 My Profile</h2>
+</div>
+
+<div class="grid2">
+
+<div class="card" style="text-align:center">
+
+<div style="font-size:80px">👤</div>
+
+<h2 id="profileName"></h2>
+
+<p id="profileEmail" class="muted"></p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Profile Information</h3>
+<br>
+
+<div class="form-group">
+<label>Name</label>
+<input id="pName">
+</div>
+
+<div class="form-group">
+<label>Mobile</label>
+<input id="pPhone" readonly>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="pEmail">
+</div>
+
+<button class="btn btn-primary"
+onclick="saveProfile()">Save</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+
+<div class="section-head">
+<h2>⚙️ Settings</h2>
+</div>
+
+<div class="card">
+
+<h3>Appearance</h3>
+<br>
+
+<button class="btn btn-outline"
+onclick="toggleDark()">
+🌙 Dark / Light Mode
+</button>
+
+</div>
+
+<div class="card section">
+
+<h3>Account</h3>
+<br>
+
+<button class="btn btn-outline"
+onclick="logout()">
+🚪 Logout
+</button>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- MOBILE -->
+<nav class="bottom">
+
+<button onclick="go('home')">🏠<br>Home</button>
+<button onclick="go('categories')">◈<br>Categories</button>
+<button onclick="go('shop')">🛍️<br>Shop</button>
+<button onclick="go('cart')">🛒<br>Cart</button>
+<button onclick="go('profile')">👤<br>Account</button>
+
+</nav>
+
+</div>
+
+
+<!-- DEPOSIT -->
+<div class="modal" id="depositModal">
+
+<div class="modal-box">
+
+<button class="close"
+onclick="closeModal('depositModal')">×</button>
+
+<h2>💰 Deposit Money</h2>
+
+<br>
+
+<div class="payment-option"
+onclick="depositMethod='bkash'">
+
+<div class="pay-logo bk">bK</div>
+<b>bKash</b>
+
+</div>
+
+<div class="payment-option"
+onclick="depositMethod='nagad'">
+
+<div class="pay-logo ng">N</div>
+<b>Nagad</b>
+
+</div>
+
+<div class="form-group">
+<label>Amount</label>
+<input id="depAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>Transaction ID</label>
+<input id="depTx">
+</div>
+
+<div class="form-group">
+<label>Screenshot</label>
+<input id="depProof" type="file" accept="image/*">
+</div>
+
+<button class="btn btn-primary full"
+onclick="submitDeposit()">
+Submit Deposit
+</button>
+
+</div>
+</div>
+
+
+<!-- TRACK -->
+<div class="modal" id="trackModal">
+
+<div class="modal-box">
+
+<button class="close"
+onclick="closeModal('trackModal')">×</button>
+
+<h2>📦 Order Tracking</h2>
+
+<p class="muted" id="trackId"></p>
+
+<div class="timeline">
+
+<div class="step done">
+<div class="dot">✓</div>
+<small>Placed</small>
+</div>
+
+<div class="step">
+<div class="dot">2</div>
+<small>Confirmed</small>
+</div>
+
+<div class="step">
+<div class="dot">3</div>
+<small>Shipped</small>
+</div>
+
+<div class="step">
+<div class="dot">4</div>
+<small>Delivered</small>
+</div>
+
+</div>
+
+<button class="btn btn-dark full"
+onclick="support()">
+Contact Support
+</button>
+
+</div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<!-- FIREBASE -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, get, child, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBjyrgsKKes3YevqiUCGaqOHjuZ2ovuCHs",
-  authDomain: "pocketcash-64873.firebaseapp.com",
-  databaseURL: "https://pocketcash-64873-default-rtdb.firebaseio.com",
-  projectId: "pocketcash-64873",
-  storageBucket: "pocketcash-64873.firebasestorage.app",
-  messagingSenderId: "107615665789",
-  appId: "1:107615665789:web:89cea358b10c5def72fb14",
-  measurementId: "G-6YKXWMFGVR"
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+sendPasswordResetEmail,
+onAuthStateChanged,
+signOut
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+getDatabase,
+ref,
+set,
+get,
+push,
+update,
+remove,
+onValue
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+import {
+getStorage,
+ref as storageRef,
+uploadBytes,
+getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+
+const firebaseConfig={
+apiKey:"AIzaSyCpxApkTge4vy6TGkHTHwIIj95XSHwAD9I",
+authDomain:"aponjon-elite-72b3f.firebaseapp.com",
+databaseURL:"https://aponjon-elite-72b3f-default-rtdb.firebaseio.com",
+projectId:"aponjon-elite-72b3f",
+storageBucket:"aponjon-elite-72b3f.firebasestorage.app",
+messagingSenderId:"637636293705",
+appId:"1:637636293705:web:cc7e7cce49a9b617c4fb98",
+measurementId:"G-ZYP4YLE0WE"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
 
-let currentUser = null;
+const auth=getAuth(app);
+const db=getDatabase(app);
+const storage=getStorage(app);
 
-// ডিফল্ট পেমেন্ট অবজেক্ট (যদি ফায়ারবেস থেকে ডেটা না আসে)
-const PAYMENT = {
- bkash: { number: "01811111111", type: "bKash Personal" },
- nagad: { number: "01722222222", type: "Nagad Personal" }
+window.FB={auth,db,storage,ref,set,get,push,update,remove,onValue,
+storageRef,uploadBytes,getDownloadURL,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+sendPasswordResetEmail,
+signOut};
+
+onAuthStateChanged(auth,async currentUser=>{
+
+if(currentUser){
+
+window.firebaseUser=currentUser;
+
+await loadFirebaseUser(currentUser.uid);
+
+document.getElementById("authScreen").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
+
+startApp();
+
+}else{
+
+window.firebaseUser=null;
+
+document.getElementById("authScreen").classList.remove("hidden");
+document.getElementById("app").classList.add("hidden");
+
+}
+
+});
+
+
+async function loadFirebaseUser(uid){
+
+const snap=await get(ref(db,"users/"+uid));
+
+if(snap.exists()){
+
+const data=snap.val();
+
+window.firebaseProfile=data;
+
+document.getElementById("pName").value=data.name||"";
+document.getElementById("pEmail").value=data.email||"";
+
+}
+
+}
+
+
+window.register=async function(){
+
+const name=document.getElementById("regName").value.trim();
+const phone=document.getElementById("regPhone").value.trim();
+const email=document.getElementById("regEmail").value.trim();
+const pass=document.getElementById("regPassword").value;
+const confirm=document.getElementById("regConfirm").value;
+
+if(!name||!email||!pass)
+return toast("সব তথ্য পূরণ করুন");
+
+if(pass.length<6)
+return toast("Password minimum 6 characters");
+
+if(pass!==confirm)
+return toast("Password মিলছে না");
+
+if(!document.getElementById("terms").checked)
+return toast("Terms accept করুন");
+
+try{
+
+const credential=
+await createUserWithEmailAndPassword(auth,email,pass);
+
+await set(
+ref(db,"users/"+credential.user.uid),
+{
+uid:credential.user.uid,
+name,
+phone,
+email,
+balance:0,
+points:0,
+createdAt:Date.now()
+}
+);
+
+toast("Account তৈরি হয়েছে");
+
+}catch(error){
+
+toast(firebaseError(error));
+
+}
+
 };
-let selectedMethod = "bkash";
 
-window.show = function(id) {
-    document.querySelectorAll(".screen").forEach(x => x.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+
+window.login=async function(){
+
+const email=document.getElementById("loginEmail").value.trim();
+const pass=document.getElementById("loginPassword").value;
+
+if(!email||!pass)
+return toast("Email এবং Password দিন");
+
+try{
+
+await signInWithEmailAndPassword(auth,email,pass);
+
+}catch(error){
+
+toast(firebaseError(error));
+
 }
 
-window.page = function(id) {
-    document.querySelectorAll(".page").forEach(x => x.classList.remove("active"));
-    let target = document.getElementById(id);
-    if(target) target.classList.add("active");
-    window.scrollTo(0,0);
+};
+
+
+window.resetPassword=async function(){
+
+const email=document.getElementById("loginEmail").value.trim();
+
+if(!email)
+return toast("আগে Email লিখুন");
+
+try{
+
+await sendPasswordResetEmail(auth,email);
+
+toast("Password reset email পাঠানো হয়েছে");
+
+}catch(error){
+
+toast(firebaseError(error));
+
 }
 
-window.toast = function(msg) {
-    let t = document.getElementById("toast");
-    t.innerText = msg;
-    t.classList.add("show");
-    setTimeout(() => { t.classList.remove("show"); }, 2500);
+};
+
+
+window.logout=async function(){
+
+await signOut(auth);
+
+};
+
+
+window.saveProfile=async function(){
+
+if(!firebaseUser)return;
+
+const name=document.getElementById("pName").value.trim();
+const email=document.getElementById("pEmail").value.trim();
+
+await update(
+ref(db,"users/"+firebaseUser.uid),
+{name,email}
+);
+
+document.getElementById("profileName").textContent=name;
+document.getElementById("profileEmail").textContent=email;
+
+toast("Profile updated");
+
+};
+
+
+window.saveOrderFirebase=async function(order){
+
+if(!firebaseUser)return;
+
+await set(
+ref(db,"orders/"+firebaseUser.uid+"/"+order.id),
+{
+...order,
+uid:firebaseUser.uid,
+createdAt:Date.now()
+}
+);
+
+};
+
+
+window.saveCartFirebase=async function(){
+
+if(!firebaseUser)return;
+
+await set(
+ref(db,"carts/"+firebaseUser.uid),
+cart
+);
+
+};
+
+
+window.submitDeposit=async function(){
+
+const amount=Number(
+document.getElementById("depAmount").value
+);
+
+const tx=document.getElementById("depTx").value.trim();
+
+const file=document.getElementById("depProof").files[0];
+
+if(!amount||amount<=0)
+return toast("Amount দিন");
+
+if(!tx)
+return toast("Transaction ID দিন");
+
+try{
+
+let proof="";
+
+if(file){
+
+const path=
+"paymentProofs/"+firebaseUser.uid+"/"+Date.now()+"_"+file.name;
+
+const storageFile=
+storageRef(storage,path);
+
+await uploadBytes(storageFile,file);
+
+proof=await getDownloadURL(storageFile);
+
 }
 
-window.togglePass = function(id) {
-    let input = document.getElementById(id);
-    input.type = input.type === "password" ? "text" : "password";
+const id=push(ref(db,"deposits")).key;
+
+await set(
+ref(db,"deposits/"+id),
+{
+id,
+uid:firebaseUser.uid,
+method:depositMethod,
+amount,
+transactionId:tx,
+proof,
+status:"Pending",
+createdAt:Date.now()
+}
+);
+
+toast("Deposit verification-এর জন্য পাঠানো হয়েছে");
+
+closeModal("depositModal");
+
+}catch(error){
+
+toast(firebaseError(error));
+
 }
 
-// ফায়ারবেস থেকে লাইভ পেমেন্ট ইনফো লোড করার ফাংশন
-function loadDynamicPaymentInfo() {
-    get(child(ref(db), 'settings/payment')).then((snapshot) => {
-        if (snapshot.exists()) {
-            let pData = snapshot.val();
-            if(pData.bkash) {
-                PAYMENT.bkash.number = pData.bkash.number || PAYMENT.bkash.number;
-                PAYMENT.bkash.type = pData.bkash.type || PAYMENT.bkash.type;
-            }
-            if(pData.nagad) {
-                PAYMENT.nagad.number = pData.nagad.number || PAYMENT.nagad.number;
-                PAYMENT.nagad.type = pData.nagad.type || PAYMENT.nagad.type;
-            }
-            // বর্তমান সিলেক্ট করা মেথড রিফ্রেশ করা
-            window.payment(selectedMethod);
-        }
-    }).catch((error) => {
-        console.error(error);
-    });
+};
+
+
+window.confirmOrder=async function(){
+
+if(!cart.length)
+return toast("Cart empty");
+
+const name=document.getElementById("cName").value.trim();
+const phone=document.getElementById("cPhone").value.trim();
+const district=document.getElementById("cDistrict").value;
+const address=document.getElementById("cAddress").value.trim();
+
+if(!name||!phone||!district||!address)
+return toast("Delivery address পূরণ করুন");
+
+const total=cart.reduce((sum,item)=>{
+
+const p=products.find(x=>x.id===item.id);
+
+return sum+p.price*item.qty;
+
+},0)+60;
+
+if(selectedPayment!=="cod"){
+
+const tx=document.getElementById("txId").value.trim();
+const file=document.getElementById("paymentScreenshot").files[0];
+
+if(!tx)
+return toast("Transaction ID দিন");
+
+if(!file)
+return toast("Payment screenshot দিন");
+
 }
 
-// ১. রেজিস্ট্রেশন ফাংশন (Referral সহ)
-window.register = function() {
-    let name = document.getElementById("regName").value.trim();
-    let phone = document.getElementById("regPhone").value.trim();
-    let pass = document.getElementById("regPass").value;
-    let confirm = document.getElementById("regConfirm").value;
-    let refInput = document.getElementById("regRef").value.trim();
-    let terms = document.getElementById("terms").checked;
+const orderId=
+"SR-"+Date.now().toString().slice(-8);
 
-    if(name.length < 2) { toast("নাম দিন"); return; }
-    if(!/^01\d{9}$/.test(phone)) { toast("সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন"); return; }
-    if(pass.length < 6) { toast("Password কমপক্ষে ৬ অক্ষর দিন"); return; }
-    if(pass !== confirm) { toast("Password মিলছে না"); return; }
-    if(!terms) { toast("Terms গ্রহণ করুন"); return; }
+const order={
 
-    let refCode = "FR" + Math.floor(100000 + Math.random() * 900000);
+id:orderId,
+uid:firebaseUser.uid,
+items:cart,
+total,
+payment:selectedPayment,
+paymentStatus:
+selectedPayment==="cod"
+?"COD Pending"
+:"Verification Pending",
+status:"Pending",
+name,
+phone,
+district,
+address,
+createdAt:Date.now()
 
-    let userData = {
-        name: name,
-        phone: phone,
-        password: pass,
-        balance: 0,
-        referrals: 0,
-        reward: 0,
-        plan: false,
-        referral: refCode,
-        referredBy: refInput || "None"
-    };
+};
 
-    get(child(ref(db), 'users/' + phone)).then((snapshot) => {
-        if (snapshot.exists()) {
-            toast("এই নম্বর দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে!");
-        } else {
-            set(ref(db, 'users/' + phone), userData).then(() => {
-                toast("Account সফলভাবে তৈরি হয়েছে!");
-                setTimeout(() => { show("loginScreen"); }, 1000);
-            });
-        }
-    });
+try{
+
+if(selectedPayment!=="cod"){
+
+const file=
+document.getElementById("paymentScreenshot").files[0];
+
+const path=
+"orderProofs/"+firebaseUser.uid+"/"+orderId+"_"+file.name;
+
+const fileRef=storageRef(storage,path);
+
+await uploadBytes(fileRef,file);
+
+order.paymentProof=
+await getDownloadURL(fileRef);
+
+order.transactionId=
+document.getElementById("txId").value.trim();
+
 }
 
-// ২. লগইন ফাংশন
-window.login = function() {
-    let phone = document.getElementById("loginPhone").value.trim();
-    let pass = document.getElementById("loginPassword").value;
+await saveOrderFirebase(order);
 
-    if(!phone || !pass) { toast("নম্বর এবং পাসওয়ার্ড দিন"); return; }
+cart=[];
 
-    get(child(ref(db), 'users/' + phone)).then((snapshot) => {
-        if (snapshot.exists()) {
-            let data = snapshot.val();
-            if(data.password === pass) {
-                currentUser = data;
-                localStorage.setItem("userPhone", phone);
-                openApp();
-                toast("Login Successful");
-            } else {
-                toast("ভুল পাসওয়ার্ড!");
-            }
-        } else {
-            toast("এই নম্বরে কোনো অ্যাকাউন্ট নেই!");
-        }
-    });
+await saveCartFirebase();
+
+renderCart();
+renderOrders();
+
+go("orders");
+
+toast("Order successfully submitted");
+
+}catch(error){
+
+toast(firebaseError(error));
+
 }
 
-function openApp() {
-    show("mainApp");
-    page("home");
-    updateUI();
-    loadDynamicPaymentInfo(); // অ্যাডমিন প্যানেল থেকে লাইভ পেমেন্ট নম্বর সিঙ্ক করবে
+};
+
+
+window.loadOrdersRealtime=function(){
+
+if(!firebaseUser)return;
+
+onValue(
+ref(db,"orders/"+firebaseUser.uid),
+snapshot=>{
+
+const data=snapshot.val()||{};
+
+orders=Object.values(data);
+
+renderOrders();
+
+}
+);
+
+};
+
+
+function firebaseError(error){
+
+const code=error.code||"";
+
+if(code.includes("email-already-in-use"))
+return "এই Email দিয়ে Account already আছে";
+
+if(code.includes("invalid-credential"))
+return "Email অথবা Password ভুল";
+
+if(code.includes("weak-password"))
+return "Password আরও শক্তিশালী দিন";
+
+if(code.includes("network"))
+return "Internet connection check করুন";
+
+return error.message||"Firebase error";
+
 }
 
-// ৩. ইউআই আপডেট করা
-function updateUI() {
-    if(!currentUser) return;
-    document.getElementById("userName").innerText = currentUser.name;
-    document.getElementById("balance").innerText = currentUser.balance;
-    document.getElementById("refCount").innerText = currentUser.referrals;
-    document.getElementById("reward").innerText = currentUser.reward;
-    document.getElementById("refCode").innerText = currentUser.referral;
-    document.getElementById("refLink").value = location.href.split("?")[0] + "?ref=" + currentUser.referral;
-    document.getElementById("withdrawBalance").innerText = currentUser.balance;
-    document.getElementById("profileName").value = currentUser.name;
-    document.getElementById("profilePhone").value = currentUser.phone;
-    document.getElementById("profileRef").value = currentUser.referral;
 
-    if(currentUser.plan) {
-        let ps = document.getElementById("planStatus");
-        ps.innerText = "Active";
-        ps.className = "bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs h-fit";
-    }
+window.FB=window.FB;
+
+</script>
+
+
+<!-- APP SCRIPT -->
+<script>
+
+const products=[
+
+{
+id:1,
+name:"Premium Oversized T-Shirt",
+cat:"T-Shirt",
+price:799,
+old:999,
+discount:20,
+emoji:"👕",
+desc:"Premium oversized streetwear T-shirt.",
+specs:"240 GSM premium fabric • Oversized fit • Comfortable daily wear.",
+imgs:["👕","🖤","⚫","👕","🧵","📦"]
+},
+
+{
+id:2,
+name:"Classic Black Hoodie",
+cat:"Hoodie",
+price:1299,
+old:1599,
+discount:19,
+emoji:"🧥",
+desc:"Premium heavyweight hoodie.",
+specs:"Warm fabric • Regular fit • Premium stitching.",
+imgs:["🧥","🖤","🔥","🧥","🧵","📦"]
+},
+
+{
+id:3,
+name:"Urban Cargo Pant",
+cat:"Pants",
+price:1199,
+old:1499,
+discount:20,
+emoji:"👖",
+desc:"Modern cargo pants for street style.",
+specs:"Multiple pockets • Durable fabric • Relaxed fit.",
+imgs:["👖","🖤","🩶","👖","🧵","📦"]
+},
+
+{
+id:4,
+name:"SWAG Cap",
+cat:"Accessories",
+price:399,
+old:499,
+discount:20,
+emoji:"🧢",
+desc:"Minimal premium cap.",
+specs:"Adjustable strap • Premium fabric • Unisex.",
+imgs:["🧢","🖤","⚫","🧢","✨","📦"]
+},
+
+{
+id:5,
+name:"Classic Sunglasses",
+cat:"Accessories",
+price:599,
+old:799,
+discount:25,
+emoji:"🕶️",
+desc:"Modern sunglasses.",
+specs:"UV protection • Lightweight frame • Unisex.",
+imgs:["🕶️","😎","🖤","🕶️","✨","📦"]
+},
+
+{
+id:6,
+name:"Premium Sneakers",
+cat:"Shoes",
+price:1799,
+old:2299,
+discount:22,
+emoji:"👟",
+desc:"Comfortable everyday sneakers.",
+specs:"Lightweight sole • Cushioned insole.",
+imgs:["👟","🤍","🖤","👟","✨","📦"]
+},
+
+{
+id:7,
+name:"Bike Riding Gloves",
+cat:"Bike",
+price:899,
+old:1099,
+discount:18,
+emoji:"🧤",
+desc:"Comfortable riding gloves.",
+specs:"Protective knuckles • Breathable fabric.",
+imgs:["🧤","🏍️","🖤","🧤","🔥","📦"]
+},
+
+{
+id:8,
+name:"Streetwear Shirt",
+cat:"T-Shirt",
+price:699,
+old:899,
+discount:22,
+emoji:"👔",
+desc:"Clean streetwear style.",
+specs:"Soft fabric • Modern cut.",
+imgs:["👔","🖤","🤍","👔","✨","📦"]
+},
+
+{
+id:9,
+name:"Luxury Watch",
+cat:"Accessories",
+price:1499,
+old:1899,
+discount:21,
+emoji:"⌚",
+desc:"Premium style watch.",
+specs:"Elegant design • Adjustable strap.",
+imgs:["⌚","🖤","✨","⌚","⏱️","📦"]
+},
+
+{
+id:10,
+name:"Bike Phone Holder",
+cat:"Bike",
+price:499,
+old:699,
+discount:29,
+emoji:"📱",
+desc:"Strong phone holder for bikes.",
+specs:"360° rotation • Strong grip.",
+imgs:["📱","🏍️","🖤","📱","🔧","📦"]
 }
 
-// ৪. পেমেন্ট মেথড সিলেকশন
-window.payment = function(method) {
-    selectedMethod = method;
-    document.getElementById("payNumber").innerText = PAYMENT[method].number;
-    document.getElementById("payType").innerText = PAYMENT[method].type;
-    
-    document.getElementById("bkashBtn").classList.remove("border-indigo-600", "border-2");
-    document.getElementById("nagadBtn").classList.remove("border-indigo-600", "border-2");
-    
-    document.getElementById(method + "Btn").classList.add("border-indigo-600", "border-2");
+];
+
+const cats=[
+["T-Shirt","👕"],
+["Hoodie","🧥"],
+["Pants","👖"],
+["Accessories","🧢"],
+["Shoes","👟"],
+["Bike","🏍️"]
+];
+
+let cart=[];
+let wishlist=[];
+let orders=[];
+let currentProduct=null;
+let selectedPayment="cod";
+let depositMethod="bkash";
+let appliedCoupon=null;
+let paymentNumber="";
+
+
+function toast(msg){
+
+const t=document.getElementById("toast");
+
+t.textContent=msg;
+
+t.classList.add("show");
+
+setTimeout(()=>{
+t.classList.remove("show")
+},2200);
+
 }
 
-window.copyPay = function() {
-    navigator.clipboard.writeText(PAYMENT[selectedMethod].number);
-    toast("Payment number copied");
+
+function authMode(mode){
+
+document.getElementById("loginBox")
+.classList.toggle("hidden",mode!=="login");
+
+document.getElementById("registerBox")
+.classList.toggle("hidden",mode!=="register");
+
+document.getElementById("loginTab")
+.classList.toggle("active",mode==="login");
+
+document.getElementById("regTab")
+.classList.toggle("active",mode==="register");
+
 }
 
-// ৫. ডিপোজিট সাবমিট
-window.depositSubmit = function() {
-    let trx = document.getElementById("trx").value.trim();
-    if(!trx || trx.length < 5) { toast("সঠিক Transaction ID দিন"); return; }
 
-    set(ref(db, 'deposits/' + currentUser.phone + "_" + Date.now()), {
-        phone: currentUser.phone,
-        name: currentUser.name,
-        method: selectedMethod,
-        trxId: trx,
-        amount: 1500,
-        status: "Pending"
-    }).then(() => {
-        document.getElementById("trx").value = "";
-        toast("Deposit request submitted successfully!");
-    });
+function startApp(){
+
+renderAll();
+
+document.getElementById("pPhone").value=
+firebaseUser?.email||"";
+
+document.getElementById("cPhone").value=
+firebaseUser?.email||"";
+
+if(window.loadOrdersRealtime)
+loadOrdersRealtime();
+
 }
 
-// ৬. উইথড্র সাবমিট
-window.withdrawSubmit = function() {
-    let number = document.getElementById("withdrawNumber").value.trim();
-    let amount = Number(document.getElementById("withdrawAmount").value);
 
-    if(!/^01\d{9}$/.test(number)) { toast("সঠিক নম্বর দিন"); return; }
-    if(!amount || amount <= 0) { toast("সঠিক Amount দিন"); return; }
-    if(amount > currentUser.balance) { toast("পর্যাপ্ত balance নেই"); return; }
+function go(id,btn){
 
-    currentUser.balance -= amount;
-    update(ref(db, 'users/' + currentUser.phone), { balance: currentUser.balance });
+document.querySelectorAll(".page")
+.forEach(x=>x.classList.remove("active"));
 
-    set(ref(db, 'withdraws/' + currentUser.phone + "_" + Date.now()), {
-        phone: currentUser.phone,
-        name: currentUser.name,
-        withdrawNumber: number,
-        amount: amount,
-        status: "Pending"
-    }).then(() => {
-        updateUI();
-        toast("Withdrawal request submitted!");
-    });
+const page=document.getElementById(id);
+
+if(page)page.classList.add("active");
+
+if(btn){
+
+document.querySelectorAll(".menu button")
+.forEach(x=>x.classList.remove("active"));
+
+btn.classList.add("active");
+
 }
 
-// ৭. রেফারেল কপি ও শেয়ার
-window.copyReferral = function() {
-    let link = document.getElementById("refLink").value;
-    navigator.clipboard.writeText(link);
-    toast("Referral link copied");
+if(id==="shop")
+renderShop(products);
+
+if(id==="cart")
+renderCart();
+
+if(id==="wishlist")
+renderWishlist();
+
+if(id==="orders")
+renderOrders();
+
+if(id==="checkout")
+renderCheckout();
+
+if(id==="profile")
+loadProfile();
+
+window.scrollTo({top:0,behavior:"smooth"});
+
 }
 
-// ৮. প্রফাইল আপডেট
-window.saveProfile = function() {
-    let name = document.getElementById("profileName").value.trim();
-    if(name.length < 2) { toast("সঠিক নাম দিন"); return; }
 
-    currentUser.name = name;
-    update(ref(db, 'users/' + currentUser.phone), { name: name }).then(() => {
-        updateUI();
-        toast("Profile Updated");
-    });
+function categoryHTML(){
+
+return cats.map(c=>`
+
+<div class="category"
+onclick="category('${c[0]}')">
+
+<div class="category-icon">
+${c[1]}
+</div>
+
+<b>${c[0]}</b>
+
+</div>
+
+`).join("");
+
 }
 
-// ৯. লগআউট
-window.logout = function() {
-    localStorage.removeItem("userPhone");
-    currentUser = null;
-    show("loginScreen");
-    toast("Logout সফল হয়েছে");
+
+function category(cat){
+
+go("shop");
+
+document.getElementById("shopTitle")
+.textContent=cat;
+
+renderShop(products.filter(p=>p.cat===cat));
+
 }
 
-// ১০. অটো লগইন চেক
-window.onload = function() {
-    let savedPhone = localStorage.getItem("userPhone");
-    if(savedPhone) {
-        get(child(ref(db), 'users/' + savedPhone)).then((snapshot) => {
-            if(snapshot.exists()) {
-                currentUser = snapshot.val();
-                openApp();
-            }
-        });
-    }
+
+function productCard(p){
+
+const wish=wishlist.includes(p.id);
+
+return `
+
+<div class="product">
+
+<span class="discount">
+-${p.discount}%
+</span>
+
+<button class="heart"
+onclick="toggleWish(${p.id})">
+${wish?"❤️":"♡"}
+</button>
+
+<div class="product-image"
+onclick="showProduct(${p.id})">
+
+${p.emoji}
+
+</div>
+
+<div class="product-body">
+
+<div class="product-name">
+${p.name}
+</div>
+
+<div class="rating">
+★★★★★
+</div>
+
+<div class="price">
+৳${p.price.toLocaleString()}
+<span class="old">
+৳${p.old.toLocaleString()}
+</span>
+</div>
+
+<div class="product-btns">
+
+<button class="btn btn-outline"
+onclick="showProduct(${p.id})">
+View
+</button>
+
+<button class="btn btn-dark"
+onclick="addCart(${p.id})">
+Add
+</button>
+
+</div>
+
+</div>
+</div>
+
+`;
+
 }
+
+
+function renderShop(list){
+
+document.getElementById("shopGrid").innerHTML=
+list.length
+?list.map(productCard).join("")
+:"<div class='card'>No product found.</div>";
+
+document.getElementById("shopCount")
+.textContent=list.length+" products";
+
+}
+
+
+function showProduct(id){
+
+currentProduct=
+products.find(p=>p.id===id);
+
+document.getElementById("dName")
+.textContent=currentProduct.name;
+
+document.getElementById("dPrice")
+.textContent=
+"৳"+currentProduct.price.toLocaleString();
+
+document.getElementById("dDesc")
+.textContent=currentProduct.desc;
+
+document.getElementById("specText")
+.textContent=currentProduct.specs;
+
+document.getElementById("mainPhoto")
+.textContent=currentProduct.emoji;
+
+document.getElementById("thumbs").innerHTML=
+currentProduct.imgs.map((x,i)=>`
+
+<div class="thumb ${i===0?"active":""}"
+onclick="changeThumb(${i})">
+${x}
+</div>
+
+`).join("");
+
+go("product");
+
+}
+
+
+function changeThumb(i){
+
+document.getElementById("mainPhoto")
+.textContent=currentProduct.imgs[i];
+
+document.querySelectorAll(".thumb")
+.forEach((x,n)=>{
+x.classList.toggle("active",n===i)
+});
+
+}
+
+
+function choose(btn){
+
+btn.parentElement
+.querySelectorAll("button")
+.forEach(x=>x.classList.remove("selected"));
+
+btn.classList.add("selected");
+
+}
+
+
+function addCurrent(){
+
+if(currentProduct)
+addCart(currentProduct.id);
+
+}
+
+
+function buyNow(){
+
+if(!currentProduct)return;
+
+cart=[{
+id:currentProduct.id,
+qty:1
+}];
+
+renderCheckout();
+
+go("checkout");
+
+}
+
+
+function addCart(id){
+
+const item=cart.find(x=>x.id===id);
+
+if(item)item.qty++;
+else cart.push({id,qty:1});
+
+updateBadge();
+
+if(window.saveCartFirebase)
+saveCartFirebase();
+
+toast("Added to cart");
+
+}
+
+
+function updateBadge(){
+
+document.getElementById("cartBadge")
+.textContent=
+cart.reduce((a,b)=>a+b.qty,0);
+
+}
+
+
+function cartSubtotal(){
+
+return cart.reduce((sum,item)=>{
+
+const p=products.find(x=>x.id===item.id);
+
+return sum+p.price*item.qty;
+
+},0);
+
+}
+
+
+function toggleWish(id){
+
+if(wishlist.includes(id))
+wishlist=wishlist.filter(x=>x!==id);
+else
+wishlist.push(id);
+
+renderAll();
+
+}
+
+
+function renderWishlist(){
+
+document.getElementById("wishGrid").innerHTML=
+wishlist.length
+?products
+.filter(p=>wishlist.includes(p.id))
+.map(productCard).join("")
+:
+"<div class='card'>Wishlist empty.</div>";
+
+}
+
+
+function changeQty(id,n){
+
+const item=cart.find(x=>x.id===id);
+
+if(!item)return;
+
+item.qty+=n;
+
+if(item.qty<=0)
+cart=cart.filter(x=>x.id!==id);
+
+renderCart();
+updateBadge();
+
+if(window.saveCartFirebase)
+saveCartFirebase();
+
+}
+
+
+function renderCart(){
+
+const box=document.getElementById("cartBox");
+
+if(!cart.length){
+
+box.innerHTML=`
+
+<div class="card"
+style="text-align:center;padding:55px">
+
+<div style="font-size:70px">🛒</div>
+
+<h2>Your cart is empty</h2>
+
+<button class="btn btn-primary"
+style="margin-top:15px"
+onclick="go('shop')">
+Shop Now
+</button>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+let rows=cart.map(item=>{
+
+const p=products.find(x=>x.id===item.id);
+
+return `
+
+<div class="cart-row">
+
+<div class="cart-img">
+${p.emoji}
+</div>
+
+<div class="cart-info">
+
+<b>${p.name}</b>
+
+<p class="muted">
+৳${p.price.toLocaleString()}
+</p>
+
+<div style="margin-top:8px">
+
+<button class="btn btn-outline"
+onclick="changeQty(${p.id},-1)">
+−
+</button>
+
+<b style="margin:0 10px">
+${item.qty}
+</b>
+
+<button class="btn btn-outline"
+onclick="changeQty(${p.id},1)">
++
+</button>
+
+</div>
+
+</div>
+
+<b>
+৳${(p.price*item.qty).toLocaleString()}
+</b>
+
+</div>
+
+`;
+
+}).join("");
+
+
+const total=cartSubtotal()+60;
+
+box.innerHTML=`
+
+<div class="grid2">
+
+<div class="card">
+${rows}
+</div>
+
+<div class="card">
+
+<h3>Order Summary</h3>
+
+<br>
+
+<p>
+Subtotal:
+<b>৳${cartSubtotal().toLocaleString()}</b>
+</p>
+
+<p style="margin-top:10px">
+Delivery:
+<b>৳60</b>
+</p>
+
+<hr style="margin:15px 0">
+
+<h2>
+Total ৳${total.toLocaleString()}
+</h2>
+
+<button class="btn btn-primary full"
+style="margin-top:18px"
+onclick="go('checkout')">
+Proceed to Checkout →
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+function searchProducts(){
+
+const q=document.getElementById("search")
+.value.toLowerCase().trim();
+
+go("shop");
+
+if(!q)
+return renderShop(products);
+
+renderShop(
+products.filter(p=>
+p.name.toLowerCase().includes(q)||
+p.cat.toLowerCase().includes(q)
+)
+);
+
+}
+
+
+function sortProducts(type){
+
+let list=[...products];
+
+if(type==="low")
+list.sort((a,b)=>a.price-b.price);
+
+if(type==="high")
+list.sort((a,b)=>b.price-a.price);
+
+if(type==="discount")
+list.sort((a,b)=>b.discount-a.discount);
+
+renderShop(list);
+
+}
+
+
+function selectPayment(type){
+
+selectedPayment=type;
+
+["bkOption","ngOption","codOption"]
+.forEach(id=>{
+document.getElementById(id)
+.classList.remove("selected");
+});
+
+const map={
+bkash:"bkOption",
+nagad:"ngOption",
+cod:"codOption"
+};
+
+document.getElementById(map[type])
+.classList.add("selected");
+
+const box=
+document.getElementById("paymentProofBox");
+
+if(type==="cod"){
+
+box.classList.add("hidden");
+
+return;
+
+}
+
+box.classList.remove("hidden");
+
+if(type==="bkash"){
+
+paymentNumber="01XXXXXXXXX";
+
+document.getElementById("paymentTitle")
+.textContent="bKash Payment";
+
+}else{
+
+paymentNumber="01XXXXXXXXX";
+
+document.getElementById("paymentTitle")
+.textContent="Nagad Payment";
+
+}
+
+document.getElementById("paymentNumber")
+.textContent=
+"Send payment to: "+paymentNumber;
+
+}
+
+
+function copyPaymentNumber(){
+
+navigator.clipboard?.writeText(paymentNumber);
+
+toast("Number copied");
+
+}
+
+
+function applyCoupon(){
+
+const code=document.getElementById("couponInput")
+.value.trim().toUpperCase();
+
+if(code==="SWAG10"){
+
+appliedCoupon={type:"percent",value:10};
+
+toast("10% discount applied");
+
+}else if(code==="WELCOME50"){
+
+appliedCoupon={type:"fixed",value:50};
+
+toast("৳50 discount applied");
+
+}else if(code==="FREESHIP"){
+
+appliedCoupon={type:"shipping",value:60};
+
+toast("Free shipping applied");
+
+}else{
+
+appliedCoupon=null;
+
+toast("Invalid coupon");
+
+}
+
+renderCheckout();
+
+}
+
+
+function checkoutTotals(){
+
+const subtotal=cartSubtotal();
+
+let discount=0;
+let delivery=60;
+
+if(appliedCoupon?.type==="percent")
+discount=Math.round(subtotal*.10);
+
+if(appliedCoupon?.type==="fixed")
+discount=Math.min(50,subtotal);
+
+if(appliedCoupon?.type==="shipping")
+delivery=0;
+
+return{
+subtotal,
+discount,
+delivery,
+total:subtotal-discount+delivery
+};
+
+}
+
+
+function renderCheckout(){
+
+const x=checkoutTotals();
+
+document.getElementById("summary")
+.innerHTML=`
+
+<p>
+Subtotal
+<b>৳${x.subtotal.toLocaleString()}</b>
+</p>
+
+<p style="margin-top:8px">
+Discount
+<b style="color:var(--green)">
+-৳${x.discount.toLocaleString()}
+</b>
+</p>
+
+<p style="margin-top:8px">
+Delivery
+<b>৳${x.delivery}</b>
+</p>
+
+<hr style="margin:13px 0">
+
+<h2>
+Total ৳${x.total.toLocaleString()}
+</h2>
+
+`;
+
+}
+
+
+function renderOrders(){
+
+const table=document.getElementById("ordersTable");
+
+if(!orders.length){
+
+table.innerHTML=
+"<tr><td colspan='6'>No orders yet.</td></tr>";
+
+return;
+
+}
+
+table.innerHTML=orders.map(o=>`
+
+<tr>
+
+<td>
+<b>#${o.id}</b>
+</td>
+
+<td>
+${o.items.reduce((a,b)=>a+b.qty,0)}
+</td>
+
+<td>
+৳${Number(o.total).toLocaleString()}
+</td>
+
+<td>
+${o.payment}
+</td>
+
+<td>
+<span class="status pending">
+${o.status||"Pending"}
+</span>
+</td>
+
+<td>
+
+<button class="btn btn-outline"
+onclick="track('${o.id}')">
+Track
+</button>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+function track(id){
+
+document.getElementById("trackId")
+.textContent="Order #"+id;
+
+document.getElementById("trackModal")
+.classList.add("show");
+
+}
+
+
+function renderWallet(){
+
+document.getElementById("balance")
+.textContent="৳0";
+
+document.getElementById("pending")
+.textContent="৳0";
+
+document.getElementById("walletPoints")
+.textContent="0";
+
+document.getElementById("points")
+.textContent="0";
+
+}
+
+
+function depositModal(){
+
+document.getElementById("depositModal")
+.classList.add("show");
+
+}
+
+
+function loadProfile(){
+
+if(!firebaseUser)return;
+
+document.getElementById("pPhone")
+.value=firebaseUser.email||"";
+
+document.getElementById("profileEmail")
+.textContent=firebaseUser.email||"";
+
+if(window.firebaseProfile){
+
+document.getElementById("pName")
+.value=window.firebaseProfile.name||"";
+
+document.getElementById("profileName")
+.textContent=window.firebaseProfile.name||"";
+
+}
+
+}
+
+
+function copy(text){
+
+navigator.clipboard?.writeText(text);
+
+toast(text+" copied");
+
+}
+
+
+function toggleDark(){
+
+document.body.classList.toggle("dark");
+
+localStorage.setItem(
+"sr_dark",
+document.body.classList.contains("dark")
+);
+
+}
+
+
+function renderAll(){
+
+document.getElementById("homeCats")
+.innerHTML=categoryHTML();
+
+document.getElementById("allCats")
+.innerHTML=categoryHTML();
+
+renderShop(products);
+renderWishlist();
+renderCart();
+renderOrders();
+renderWallet();
+updateBadge();
+
+document.getElementById("flashProducts")
+.innerHTML=
+products.slice(0,5).map(productCard).join("");
+
+document.getElementById("bestProducts")
+.innerHTML=
+products.slice(5,10).map(productCard).join("");
+
+}
+
+
+function support(){
+
+alert(
+"SWAG RAKIB SUPPORT\n\n"+
+"এখানে তোমার official WhatsApp number/link বসাও।"
+);
+
+}
+
+
+function closeModal(id){
+
+document.getElementById(id)
+.classList.remove("show");
+
+}
+
+
+if(localStorage.getItem("sr_dark")==="true")
+document.body.classList.add("dark");
+
+
+let saleSeconds=8*60*60;
+
+setInterval(()=>{
+
+saleSeconds--;
+
+if(saleSeconds<0)
+saleSeconds=8*60*60;
+
+const h=
+String(Math.floor(saleSeconds/3600))
+.padStart(2,"0");
+
+const m=
+String(Math.floor((saleSeconds%3600)/60))
+.padStart(2,"0");
+
+const s=
+String(saleSeconds%60)
+.padStart(2,"0");
+
+const timer=document.getElementById("saleTimer");
+
+if(timer)
+timer.textContent=`${h}:${m}:${s}`;
+
+},1000);
+
 </script>
 
 </body>
